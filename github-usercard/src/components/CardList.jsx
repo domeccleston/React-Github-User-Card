@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import Card from './Card';
+import UserCard from './Card';
 
 export default class CardList extends React.Component {
     constructor(props) {
@@ -26,24 +26,26 @@ export default class CardList extends React.Component {
                 }))
             .then(res => 
                 axios.get(this.state.userData.followers_url)
-                    .then(res => 
-                        this.setState({
-                            followersData: res.data
+                    .then(res => {
+                        res.data.forEach((follower) => {
+                            axios.get(follower.url)
+                                .then(res => {
+                                    this.setState(currentState => {
+                                        
+                                    }
+                                })
                         })
-                    )
+                    })
                 )
     }
 
     handleSubmit = () => event => {
         event.preventDefault();
-        console.log(this.state.searchText)
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        console.log(prevState);
-    }
 
     render() {
+        console.log(this.state.followersData)
         return (
             <div>
             <form onSubmit={this.handleSubmit}>
@@ -51,7 +53,7 @@ export default class CardList extends React.Component {
             </form>
 
             {this.state.followersData.map(follower => (
-                <Card userData={follower} />
+                <UserCard userData={follower} />
             ))}
             </div>
         )
